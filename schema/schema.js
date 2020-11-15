@@ -1,13 +1,18 @@
 const graphql = require('graphql');
 const _ = require('lodash');
-const { GraphQLObjectType, GraphQLSchema, GraphQLString } = graphql;
+const {
+  GraphQLObjectType,
+  GraphQLSchema,
+  GraphQLString,
+  GraphQLID
+} = graphql;
 
 const books = require('../data/book.json');
 
 const BookType = new GraphQLObjectType({
   name: 'Book',
   fields: {
-    id: { type: graphql.GraphQLInt },
+    id: { type: GraphQLID },
     name: { type: GraphQLString },
     genre: { type: GraphQLString }
   }
@@ -19,9 +24,10 @@ const RootQuery = new GraphQLObjectType({
     book: {
       type: BookType,
       args: {
-        id: { type: graphql.GraphQLInt }
+        id: { type: GraphQLID }
       },
       resolve: (source, args) => {
+        console.log(typeof args.id);
         return _.find(books, {
           id: args.id
         })
@@ -30,10 +36,11 @@ const RootQuery = new GraphQLObjectType({
     books: {
       type: graphql.GraphQLList(BookType),
       args: {
-        id: { type: graphql.GraphQLInt },
+        id: { type: GraphQLID },
         name: { type: GraphQLString }
       },
       resolve: (source, args) => {
+        console.log(typeof args.id);
         let results = books;
 
         if (args.id) {
